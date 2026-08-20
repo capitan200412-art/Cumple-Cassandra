@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Feliz Cumpleaños, Cassandra 🌟</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  /* ============================================================
+     TOKENS DE DISEÑO
+     ============================================================ */
+  :root{
+    --bg-deep:   #080b1f;
+    --bg-mid:    #121a3d;
+    --bg-lit:    #1e2a63;
+    --gold:      #f6c667;
+    --gold-soft: #ffe3ac;
+    --rose:      #ff8fa3;
+    --rose-deep: #ff4d6d;
+    --cream:     #fdf3e7;
+    --ink:       #3a2c22;
+    --lavender:  #b9b8d6;
+
+    --font-display: 'Playfair Display', serif;
+    --font-body: 'Quicksand', sans-serif;
+  }
+
+  *{ box-sizing:border-box; margin:0; padding:0; }
+
+  html,body{
+    height:100%;
+    background:var(--bg-deep);
+    color:var(--cream);
+    font-family:var(--font-body);
+    overflow-x:hidden;
+  }
+
+  button{ font-family:inherit; border:none; cursor:pointer; background:none; color:inherit; }
+
+  :focus-visible{
+    outline:3px solid var(--gold);
+    outline-offset:4px;
+    border-radius:6px;
+  }
+
+  .hidden{ display:none !important; }
+
+  /* Botón flotante de sonido */
+  #sound-toggle{
+    position:fixed;
+    top:18px; right:18px;
+    z-index:500;
+    width:46px; height:46px;
+    border-radius:50%;
+    background:rgba(255,255,255,.08);
+    backdrop-filter:blur(6px);
+    font-size:1.3rem;
+    display:flex; align-items:center; justify-content:center;
+    transition:transform .2s, background .2s;
+    border:1px solid rgba(255,255,255,.15);
+  }
+  #sound-toggle:hover{ transform:scale(1.08); background:rgba(255,255,255,.15); }
+
+  .page{
+    position:relative;
+    min-height:100vh;
+    width:100%;
+    overflow:hidden;
+    transition:opacity .8s ease;
+  }
+
+  /* ============================================================
+     PÁGINA 1 — LA ESTRELLA
+     ============================================================ */
+  #page1{
+    background: radial-gradient(ellipse at 50% 20%, var(--bg-mid) 0%, var(--bg-deep) 70%);
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center;
+    padding:2rem 1.5rem;
+    transition: background 1.6s ease;
+  }
+  #page1.lit{
+    background: radial-gradient(ellipse at 50% 35%, var(--bg-lit) 0%, var(--bg-mid) 55%, var(--bg-deep) 100%);
+  }
+
+  .sky{ position:absolute; inset:0; z-index:0; pointer-events:none; }
+  .twinkle{
+    position:absolute;
+    background:#fff;
+    border-radius:50%;
+    animation:twinkle 3s ease-in-out infinite;
+  }
+  @keyframes twinkle{
+    0%,100%{ opacity:.15; }
+    50%{ opacity:.9; }
+  }
+
+  .intro-text{
+    font-family:var(--font-body);
+    font-size:clamp(.95rem, 2.2vw, 1.15rem);
+    letter-spacing:.04em;
+    color:var(--lavender);
+    margin-bottom:2.2rem;
+    z-index:2;
+    animation: fadeIn 1.5s ease;
+  }
+  #page1.lit .intro-text{ opacity:0; transition:opacity .6s; }
+
+  .star-btn{
+    position:relative;
+    z-index:2;
+    width:110px; height:110px;
+    display:flex; align-items:center; justify-content:center;
+    font-size:3.6rem;
+    filter: drop-shadow(0 0 12px rgba(246,198,103,.55));
+    animation: floatStar 4s ease-in-out infinite;
+    transition: transform .5s, filter .5s;
+  }
+  .star-btn:hover{ transform:scale(1.08); }
+  @keyframes floatStar{
+    0%,100%{ transform:translateY(0); }
+    50%{ transform:translateY(-10px); }
+  }
+  #page1.lit .star-btn{
+    animation: shrinkStar 1s ease forwards;
+  }
+  @keyframes shrinkStar{
+    0%{ transform:scale(1); filter:drop-shadow(0 0 12px rgba(246,198,103,.55)); }
+    40%{ transform:scale(2.4); filter:drop-shadow(0 0 60px rgba(246,198,103,.9)); opacity:1;}
+    100%{ transform:scale(.55) translateY(-140px); filter:drop-shadow(0 0 20px rgba(246,198,103,.6)); opacity:.85;}
+  }
+
+  .light-burst{
+    position:absolute; z-index:1;
+    top:50%; left:50%;
+    width:10px; height:10px;
+    border-radius:50%;
+    background:radial-gradient(circle, rgba(255,240,200,.9) 0%, rgba(255,240,200,0) 70%);
+    transform:translate(-50%,-50%);
+    opacity:0;
+    pointer-events:none;
+  }
+  #page1.lit .light-burst{
+    animation: burst 1.4s ease-out forwards;
+  }
+  @keyframes burst{
+    0%{ width:10px; height:10px; opacity:1; }
+    100%{ width:1600px; height:1600px; opacity:0; }
+  }
+
+  /* Emojis cayendo */
+  .rain-layer{ position:absolute; inset:0; z-index:1; overflow:hidden; pointer-events:none; }
+  .falling-emoji{
+    position:absolute;
+    top:-60px;
+    font-size:1.6rem;
+    animation-name: fall;
+    animation-timing-function: linear;
+    animation-fill-mode: forwards;
+    opacity:.9;
+  }
+  @keyframes fall{
+    0%{ transform:translateY(0) rotate(0deg); }
+    100%{ transform:translateY(115vh) rotate(360deg); }
+  }
+
+  /* Sobre */
+  .envelope-wrap{
+    position:relative;
+    z-index:3;
+    margin-top:2.4rem;
+    opacity:0;
+    transform:translateY(30px) scale(.8);
+    pointer-events:none;
+    transition: opacity .8s ease .3s, transform .8s cubic-bezier(.34,1.56,.64,1) .3s;
+  }
+  #page1.lit .envelope-wrap{
+    opacity:1;
+    transform:translateY(0) scale(1);
+    pointer-events:auto;
+  }
+
+  .envelope-label{
+    display:block;
+    font-family:var(--font-display);
+    font-style:italic;
+    font-size:1.05rem;
+    color:var(--gold-soft);
+    margin-bottom:.9rem;
+    animation: pulseLabel 2.4s ease-in-out infinite;
+  }
+  @keyframes pulseLabel{ 0%,100%{opacity:.7;} 50%{opacity:1;} }
+
+  .envelope{
+    position:relative;
+    width:min(78vw, 300px);
+    height:min(52vw, 195px);
+    margin:0 auto;
+  }
+  .envelope-body{
+    position:absolute; inset:0;
+    background: linear-gradient(160deg, var(--rose) 0%, var(--rose-deep) 100%);
+    border-radius:10px;
+    box-shadow: 0 22px 45px rgba(0,0,0,.5), inset 0 0 0 1px rgba(255,255,255,.15);
+  }
+  .envelope-body::after{
+    content:'';
+    position:absolute; left:0; right:0; bottom:0; top:38%;
+    background: linear-gradient(160deg, rgba(255,255,255,.06), rgba(0,0,0,.12));
+    clip-path: polygon(0 0, 50% 42%, 100% 0, 100% 100%, 0 100%);
+    border-radius:0 0 10px 10px;
+  }
+  .envelope-flap{
+    position:absolute; top:0; left:0; width:100%; height:58%;
+    background: linear-gradient(160deg, var(--gold-soft), var(--gold));
+    clip-path: polygon(0 0, 100% 0, 50% 100%);
+    transform-origin: top center;
+    transition: transform .8s cubic-bezier(.5,-0.3,.4,1.4);
+    z-index:3;
+    box-shadow: 0 6px 16px rgba(0,0,0,.25);
+  }
+  .envelope.open .envelope-flap{ transform: rotateX(180deg); }
+  .envelope-seal{
+    position:absolute; top:33%; left:50%; transform:translate(-50%,-50%);
+    font-size:1.6rem; z-index:4;
+    filter:drop-shadow(0 2px 4px rgba(0,0,0,.4));
+    transition:opacity .3s, transform .3s;
+  }
+  .envelope.open .envelope-seal{ opacity:0; transform:translate(-50%,-50%) scale(.3); }
+
+  .envelope-hint{
+    margin-top:1rem;
+    font-size:.85rem;
+    color:var(--lavender);
+    opacity:.85;
+  }
+
+  /* Modal de la carta */
+  .letter-overlay{
+    position:fixed; inset:0; z-index:100;
+    background:rgba(6,8,20,.72);
+    backdrop-filter: blur(4px);
+    display:flex; align-items:center; justify-content:center;
+    padding:1.2rem;
+    opacity:0; pointer-events:none;
+    transition:opacity .5s ease;
+  }
+  .letter-overlay.show{ opacity:1; pointer-events:auto; }
+
+  .letter-card{
+    max-width:600px; width:100%;
+    max-height:86vh;
+    overflow-y:auto;
+    background: var(--cream);
+    color:var(--ink);
+    border-radius:16px;
+    padding:2.6rem 2.2rem;
+    box-shadow: 0 30px 80px rgba(0,0,0,.5);
+    transform:translateY(24px) scale(.96);
+    transition: transform .5s cubic-bezier(.34,1.4,.64,1);
+    text-align:left;
+  }
+  .letter-overlay.show .letter-card{ transform:translateY(0) scale(1); }
+
+  .letter-heading{
+    font-family:var(--font-display);
+    font-style:italic;
+    font-size:1.5rem;
+    color:var(--rose-deep);
+    margin-bottom:1.1rem;
+  }
+  .letter-body p{
+    font-size:1rem;
+    line-height:1.75;
+    margin-bottom:1rem;
+  }
+  .letter-signature{
+    font-family:var(--font-display);
+    font-style:italic;
+    font-size:1.15rem;
+    margin-top:1.4rem;
+    color:var(--rose-deep);
+  }
+
+  .continue-btn{
+    display:inline-flex; align-items:center; gap:.5rem;
+    margin-top:1.6rem;
+    padding:.85rem 1.7rem;
+    border-radius:50px;
+    background: linear-gradient(120deg, var(--gold), var(--rose-deep));
+    color:#fff;
+    font-weight:600;
+    font-size:.95rem;
+    letter-spacing:.02em;
+    box-shadow:0 10px 24px rgba(255,77,109,.35);
+    transition: transform .25s, box-shadow .25s;
+  }
+  .continue-btn:hover{ transform:translateY(-2px); box-shadow:0 14px 30px rgba(255,77,109,.45); }
+
+  /* ============================================================
+     PÁGINA 2 — GALERÍA
+     ============================================================ */
+  #page2{
+    background: linear-gradient(180deg, var(--bg-deep) 0%, var(--bg-mid) 100%);
+    padding: 4.5rem 1.5rem 5rem;
+    text-align:center;
+  }
+  .page2-title{
+    font-family:var(--font-display);
+    font-style:italic;
+    font-size:clamp(1.8rem, 5vw, 2.6rem);
+    color:var(--gold-soft);
+    margin-bottom:.6rem;
+  }
+  .page2-subtitle{
+    color:var(--lavender);
+    font-size:1rem;
+    margin-bottom:2.8rem;
+  }
+  .gallery{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));
+    gap:1.4rem;
+    max-width:1000px;
+    margin:0 auto 3rem;
+  }
+  .gallery figure{
+    position:relative;
+    border-radius:14px;
+    overflow:hidden;
+    aspect-ratio:4/5;
+    background: linear-gradient(160deg, var(--bg-lit), var(--bg-mid));
+    box-shadow:0 14px 34px rgba(0,0,0,.4);
+    border:1px solid rgba(255,255,255,.08);
+  }
+  .gallery img{
+    width:100%; height:100%; object-fit:cover;
+    display:block;
+    transition: transform .5s ease;
+  }
+  .gallery figure:hover img{ transform:scale(1.06); }
+  .gallery figcaption{
+    position:absolute; left:0; right:0; bottom:0;
+    padding:.9rem .8rem .7rem;
+    background: linear-gradient(0deg, rgba(0,0,0,.72), transparent);
+    font-size:.85rem;
+    text-align:left;
+    color:var(--cream);
+  }
+  .photo-placeholder{
+    width:100%; height:100%;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap:.5rem;
+    color:var(--lavender);
+    font-size:.8rem;
+    padding:1rem;
+    text-align:center;
+  }
+  .photo-placeholder span.icon{ font-size:2rem; }
+
+  /* ============================================================
+     PÁGINA 3 — CELEBRACIÓN FINAL
+     ============================================================ */
+  #page3{
+    background: radial-gradient(ellipse at 50% 30%, #1a1440 0%, var(--bg-deep) 70%);
+    min-height:100vh;
+    display:flex; align-items:center; justify-content:center;
+    text-align:center;
+    padding:2rem;
+  }
+  #fireworks-canvas{ position:absolute; inset:0; z-index:1; }
+  .fx-layer{ position:absolute; inset:0; z-index:2; overflow:hidden; pointer-events:none; }
+  .falling-rose, .rising-heart{
+    position:absolute;
+    font-size:1.7rem;
+  }
+  .falling-rose{
+    top:-60px;
+    animation-name: fall;
+    animation-timing-function: linear;
+  }
+  .rising-heart{
+    bottom:-60px;
+    animation-name: rise;
+    animation-timing-function: ease-in;
+  }
+  @keyframes rise{
+    0%{ transform:translateY(0) translateX(0); opacity:.9; }
+    100%{ transform:translateY(-115vh) translateX(var(--drift, 30px)); opacity:0; }
+  }
+
+  .final-message{
+    position:relative; z-index:3;
+    max-width:640px;
+  }
+  .final-title{
+    font-family:var(--font-display);
+    font-style:italic;
+    font-weight:700;
+    font-size:clamp(2.1rem, 7vw, 3.6rem);
+    color:var(--gold-soft);
+    text-shadow:0 0 30px rgba(246,198,103,.4);
+    margin-bottom:1rem;
+    line-height:1.15;
+  }
+  .final-sub{
+    font-size:clamp(1rem, 2.6vw, 1.25rem);
+    color:var(--rose);
+    letter-spacing:.02em;
+  }
+
+  @keyframes fadeIn{
+    from{opacity:0;} to{opacity:1;}
+  }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important; }
+  }
+</style>
+</head>
+<body>
+
+<button id="sound-toggle" aria-label="Silenciar o activar música">🔊</button>
+
+<!-- ============================================================
+     PÁGINA 1
+     ============================================================ -->
+<section id="page1" class="page">
+  <div class="sky" id="sky"></div>
+  <div class="light-burst"></div>
+  <div class="rain-layer" id="rain-layer"></div>
+
+  <p class="intro-text">✨ toca la estrella ✨</p>
+
+  <button class="star-btn" id="star-btn" aria-label="Encender la estrella">🌟</button>
+
+  <div class="envelope-wrap">
+    <span class="envelope-label">para Cassandra 💌</span>
+    <div class="envelope" id="envelope" role="button" tabindex="0" aria-label="Abrir sobre">
+      <div class="envelope-body"></div>
+      <div class="envelope-flap"></div>
+      <div class="envelope-seal">💛</div>
+    </div>
+    <p class="envelope-hint">ábrelo…</p>
+  </div>
+</section>
+
+<!-- Modal de la carta -->
+<div class="letter-overlay" id="letter-overlay">
+  <div class="letter-card">
+    <h2 class="letter-heading">Para ti, Cassandra</h2>
+    <div class="letter-body">
+      <!-- ============================================================
+           EDITA ESTE TEXTO A TU GUSTO — agrega recuerdos e inside jokes
+           ============================================================ -->
+      <p>Hoy el mundo tiene un motivo más para brillar: en unas horas cumples 21 años, y quiero que sepas todo lo que significas para mí.</p>
+      <p>Eres esa persona que le pone color a mis días más grises, que me hace reír incluso cuando no tengo ganas, y que camina a mi lado sin pedirme ser perfecto — solo real.</p>
+      <p>Este nuevo año de vida que empieza trae contigo toda la fuerza que ya llevas dentro: sigue soñando en grande, sigue confiando en ti misma, sigue siendo esa mujer valiente, brillante y hermosa que no le teme a nada.</p>
+      <p>Gracias por existir, por elegirme cada día y por dejarme ser parte de tu historia. Que este año te regrese en triples todo el amor y la luz que tú le das al mundo.</p>
+      <p>Feliz cumpleaños, mi amor. Te amo con todo lo que soy.</p>
+    </div>
+    <p class="letter-signature">Con todo mi corazón, tu novio 🤍</p>
+    <button class="continue-btn" id="to-page2-btn">Continuar 🎂</button>
+  </div>
+</div>
+
+<!-- ============================================================
+     PÁGINA 2 — GALERÍA (agrega tus fotos aquí abajo, ver README)
+     ============================================================ -->
+<section id="page2" class="page hidden">
+  <h2 class="page2-title">Nosotros 💞</h2>
+  <p class="page2-subtitle">algunos momentos que ya son parte de mi historia favorita</p>
+  <div class="gallery" id="gallery"></div>
+  <button class="continue-btn" id="to-page3-btn">Continuar 🎉</button>
+</section>
+
+<!-- ============================================================
+     PÁGINA 3 — CELEBRACIÓN FINAL
+     ============================================================ -->
+<section id="page3" class="page hidden">
+  <canvas id="fireworks-canvas"></canvas>
+  <div class="fx-layer" id="rose-layer"></div>
+  <div class="fx-layer" id="heart-layer"></div>
+  <div class="final-message">
+    <h1 class="final-title">¡Feliz Cumpleaños,<br>Cassandra! 🎉🌹</h1>
+    <p class="final-sub">21 años de pura magia ✨ que este sea tu mejor año</p>
+  </div>
+</section>
+
+<!-- ============================================================
+     AUDIO — reemplaza estos archivos en assets/audio/ (ver README)
+     ============================================================ -->
+<audio id="audio-birthday" src="assets/audio/felicidades.mp3" loop preload="none"></audio>
+<audio id="audio-gallery" src="assets/audio/cancion.mp3" loop preload="none"></audio>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------- Utilidades ---------- */
+  const rand = (min, max) => Math.random() * (max - min) + min;
+  const pick = arr => arr[Math.floor(Math.random() * arr.length)];
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- Control de sonido global ---------- */
+  let muted = false;
+  const soundBtn = document.getElementById('sound-toggle');
+  const audioBirthday = document.getElementById('audio-birthday');
+  const audioGallery = document.getElementById('audio-gallery');
+
+  soundBtn.addEventListener('click', () => {
+    muted = !muted;
+    [audioBirthday, audioGallery].forEach(a => a.muted = muted);
+    soundBtn.textContent = muted ? '🔇' : '🔊';
+  });
+
+  function playSafely(audioEl){
+    audioEl.muted = muted;
+    audioEl.currentTime = 0;
+    audioEl.play().catch(() => { /* el usuario puede activar el sonido manualmente */ });
+  }
+
+  /* ---------- Cielo estrellado (página 1) ---------- */
+  const sky = document.getElementById('sky');
+  const STAR_COUNT = reducedMotion ? 25 : 90;
+  for(let i = 0; i < STAR_COUNT; i++){
+    const s = document.createElement('div');
+    s.className = 'twinkle';
+    const size = rand(1, 2.6);
+    s.style.width = size + 'px';
+    s.style.height = size + 'px';
+    s.style.left = rand(0, 100) + '%';
+    s.style.top = rand(0, 100) + '%';
+    s.style.animationDelay = rand(0, 3) + 's';
+    s.style.animationDuration = rand(2, 4.5) + 's';
+    sky.appendChild(s);
+  }
+
+  /* ---------- Encender la estrella ---------- */
+  const page1 = document.getElementById('page1');
+  const starBtn = document.getElementById('star-btn');
+  const rainLayer = document.getElementById('rain-layer');
+  let ignited = false;
+  let rainInterval = null;
+
+  const BIRTHDAY_EMOJIS = ['🎂','🎉','🎈','🥳','🎁','🍰','✨','🎊'];
+
+  function spawnFallingEmoji(container, emojiPool, opts){
+    opts = opts || {};
+    const el = document.createElement('div');
+    el.className = opts.className || 'falling-emoji';
+    el.textContent = pick(emojiPool);
+    el.style.left = rand(0, 100) + '%';
+    const duration = rand(opts.minDur || 5, opts.maxDur || 9);
+    el.style.animationDuration = duration + 's';
+    el.style.fontSize = rand(opts.minSize || 1.2, opts.maxSize || 2.2) + 'rem';
+    if(opts.driftVar){ el.style.setProperty('--drift', rand(-40, 40) + 'px'); }
+    container.appendChild(el);
+    setTimeout(() => el.remove(), duration * 1000 + 200);
+  }
+
+  function igniteStar(){
+    if(ignited) return;
+    ignited = true;
+    page1.classList.add('lit');
+    playSafely(audioBirthday);
+
+    const spawnRate = reducedMotion ? 900 : 260;
+    rainInterval = setInterval(() => {
+      spawnFallingEmoji(rainLayer, BIRTHDAY_EMOJIS);
+    }, spawnRate);
+  }
+
+  starBtn.addEventListener('click', igniteStar);
+  starBtn.addEventListener('keydown', e => {
+    if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); igniteStar(); }
+  });
+
+  /* ---------- Sobre + carta ---------- */
+  const envelope = document.getElementById('envelope');
+  const letterOverlay = document.getElementById('letter-overlay');
+
+  function openEnvelope(){
+    if(!ignited) return;
+    envelope.classList.add('open');
+    setTimeout(() => letterOverlay.classList.add('show'), 450);
+  }
+  envelope.addEventListener('click', openEnvelope);
+  envelope.addEventListener('keydown', e => {
+    if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); openEnvelope(); }
+  });
+
+  /* ---------- Transición a página 2 ---------- */
+  const page2 = document.getElementById('page2');
+  const toPage2Btn = document.getElementById('to-page2-btn');
+
+  toPage2Btn.addEventListener('click', () => {
+    letterOverlay.classList.remove('show');
+    audioBirthday.pause();
+    page1.style.opacity = '0';
+    setTimeout(() => {
+      page1.classList.add('hidden');
+      clearInterval(rainInterval);
+      page2.classList.remove('hidden');
+      requestAnimationFrame(() => { page2.style.opacity = '1'; });
+      playSafely(audioGallery);
+    }, 700);
+  });
+
+  /* ---------- Galería de fotos ----------
+     EDITA este arreglo con tus propias fotos. Coloca los archivos en
+     assets/images/ y actualiza "src". El "caption" es opcional. */
+  const photos = [
+    { src: 'assets/images/foto1.jpg', caption: '' },
+    { src: 'assets/images/foto2.jpg', caption: '' },
+    { src: 'assets/images/foto3.jpg', caption: '' },
+    { src: 'assets/images/foto4.jpg', caption: '' },
+  ];
+
+  const gallery = document.getElementById('gallery');
+  photos.forEach(photo => {
+    const fig = document.createElement('figure');
+    const img = document.createElement('img');
+    img.src = photo.src;
+    img.alt = photo.caption || 'Foto de nosotros';
+    img.loading = 'lazy';
+    img.onerror = () => {
+      fig.innerHTML = '<div class="photo-placeholder"><span class="icon">📷</span>agrega tu foto en<br>' + photo.src + '</div>';
+    };
+    fig.appendChild(img);
+    if(photo.caption){
+      const cap = document.createElement('figcaption');
+      cap.textContent = photo.caption;
+      fig.appendChild(cap);
+    }
+    gallery.appendChild(fig);
+  });
+
+  /* ---------- Transición a página 3 ---------- */
+  const page3 = document.getElementById('page3');
+  const toPage3Btn = document.getElementById('to-page3-btn');
+  let page3Started = false;
+
+  toPage3Btn.addEventListener('click', () => {
+    page2.style.opacity = '0';
+    setTimeout(() => {
+      page2.classList.add('hidden');
+      page3.classList.remove('hidden');
+      requestAnimationFrame(() => { page3.style.opacity = '1'; });
+      if(!page3Started){ startFinalCelebration(); page3Started = true; }
+    }, 700);
+  });
+
+  /* ---------- Página 3: fuegos artificiales, rosas y corazones ---------- */
+  function startFinalCelebration(){
+    // Rosas cayendo
+    const roseLayer = document.getElementById('rose-layer');
+    setInterval(() => {
+      spawnFallingEmoji(roseLayer, ['🌹'], {
+        className: 'falling-rose', minDur: 6, maxDur: 10, minSize: 1.3, maxSize: 2.4
+      });
+    }, reducedMotion ? 1200 : 400);
+
+    // Corazones subiendo
+    const heartLayer = document.getElementById('heart-layer');
+    const HEARTS = ['❤️','💕','💖','💗','💛'];
+    setInterval(() => {
+      const el = document.createElement('div');
+      el.className = 'rising-heart';
+      el.textContent = pick(HEARTS);
+      el.style.left = rand(0, 100) + '%';
+      el.style.setProperty('--drift', rand(-50, 50) + 'px');
+      const duration = rand(5, 9);
+      el.style.animationDuration = duration + 's';
+      el.style.fontSize = rand(1.2, 2) + 'rem';
+      heartLayer.appendChild(el);
+      setTimeout(() => el.remove(), duration * 1000 + 200);
+    }, reducedMotion ? 1200 : 350);
+
+    // Fuegos artificiales (canvas)
+    const canvas = document.getElementById('fireworks-canvas');
+    const ctx = canvas.getContext('2d');
+    let w, h;
+    function resize(){
+      w = canvas.width = canvas.offsetWidth;
+      h = canvas.height = canvas.offsetHeight;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    const COLORS = ['#f6c667', '#ff8fa3', '#ff4d6d', '#fdf3e7', '#ffe3ac'];
+    let particles = [];
+
+    function launchFirework(){
+      const x = rand(w * 0.15, w * 0.85);
+      const y = rand(h * 0.18, h * 0.5);
+      const color = pick(COLORS);
+      const count = reducedMotion ? 18 : 34;
+      for(let i = 0; i < count; i++){
+        const angle = (Math.PI * 2 * i) / count;
+        const speed = rand(1.5, 4.5);
+        particles.push({
+          x, y,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed,
+          alpha: 1,
+          color,
+          size: rand(1.5, 3)
+        });
+      }
+    }
+
+    function tick(){
+      ctx.fillStyle = 'rgba(8,11,31,0.22)';
+      ctx.fillRect(0, 0, w, h);
+
+      particles.forEach(p => {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += 0.045; // gravedad
+        p.alpha -= 0.014;
+        if(p.alpha > 0){
+          ctx.globalAlpha = Math.max(p.alpha, 0);
+          ctx.fillStyle = p.color;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      });
+      ctx.globalAlpha = 1;
+      particles = particles.filter(p => p.alpha > 0);
+
+      requestAnimationFrame(tick);
+    }
+    tick();
+
+    launchFirework();
+    setInterval(launchFirework, reducedMotion ? 2200 : 1100);
+  }
+
+})();
+</script>
+</body>
+</html>
